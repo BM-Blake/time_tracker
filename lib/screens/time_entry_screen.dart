@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:time_tracker/models/project.dart';
 import 'package:time_tracker/models/time_entry.dart';
@@ -89,13 +90,40 @@ class _AddTimeEntryScreenState extends State<AddTimeEntryScreen> {
                                   value: task.id,
                                   child: Text(task.name),
                                 );
-                              })
-                              ,
+                              }),
                           const DropdownMenuItem<String>(
                             value: 'add_new_task',
                             child: Text('Add New Task'),
                           ),
                         ],
+              ),
+              const SizedBox(height: 16),
+              // Date field
+              // Add a date selection field above the Total Time field
+              TextFormField(
+                readOnly:
+                    true, // Make the field read-only to prevent manual input
+                decoration: const InputDecoration(labelText: 'Date'),
+                controller: TextEditingController(
+                  text: DateFormat(
+                    'dd-MM-yyyy',
+                  ).format(date), // Display the selected date
+                ),
+                onTap: () async {
+                  final selectedDate = await showDatePicker(
+                    context: context,
+                    initialDate: date,
+                    firstDate: DateTime(
+                      2000,
+                    ), // Set the earliest selectable date
+                    lastDate: DateTime(2100), // Set the latest selectable date
+                  );
+                  if (selectedDate != null) {
+                    setState(() {
+                      date = selectedDate; // Update the selected date
+                    });
+                  }
+                },
               ),
               const SizedBox(height: 16),
               // Total Time field
